@@ -10,7 +10,7 @@ class Blockchain:
             data="genesis block", proof=1, previous_hash="0", index=1
         )
         self.chain.append(initial_block)
-
+        self.req = []
     def mine_block(self, data: str) -> dict:
         previous_block = self.get_previous_block()
         previous_proof = previous_block["proof"]

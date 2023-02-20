@@ -41,7 +41,25 @@ def previous_block():
         return _fastapi.HTTPException(status_code=400, detail="The blockchain is invalid")
         
     return blockchain.get_previous_block()
+@app.get('/request/')
+def get_request()->str:
+    with open('cloud/req.json') as f:
+        data = json.load(f)
+    blockchain.req = data
+    return data 
+
+    
+@app.get('/request_logging/')
+def request_logging(aprovel:bool):
+    if aprovel == True:
+        block = mine_block(blockchain.req)
+        return "Aproved"
+    else:
+        return "not Aproved"
 
 
 if __name__ == '__main__':
     uvicorn.run(app)
+
+# Authentication Oauth
+# Kalfka # Hpose # raft
