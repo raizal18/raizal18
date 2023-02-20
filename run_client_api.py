@@ -15,6 +15,11 @@ def add_new_data_req(data:str) -> str:
         json.dump(data, f, ensure_ascii=False, indent=4)
     return data
 
+# @client.get('/Updated Chain block/')
+# def get_chain_pd():
+#     with open('cloud/data.json') as f:
+#         data = json.load(f)
+#     return pd.DataFrame(data)
 
 if __name__ == '__main__':
     uvicorn.run(client,  port=8080, log_level="info")
