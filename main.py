@@ -52,7 +52,7 @@ def previous_block():
         
     return blockchain.get_previous_block()
 @app.get('/request/')
-def get_request()->str:
+def get_request() -> str:
     with open('cloud/req.json') as f:
         data = json.load(f)
     blockchain.req = data
