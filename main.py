@@ -2,9 +2,19 @@ import fastapi as _fastapi
 import blockchain as _blockchain
 import uvicorn
 import json
+# from fastapi import Depends, FastAPI
+# from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 blockchain = _blockchain.Blockchain()
 app = _fastapi.FastAPI()
 
+# token_url = "service_that_will_generate_token/token"
+# oauth2 = OAuth2PasswordBearer(tokenUrl=token_url)
+
+# @app.post("/token")
+# async def gen_token_to_login(input_data : OAuth2PasswordRequestForm = Depends()):
+#    # check if user exists in db if required by username and hashed password
+#    # we can also compute a JWT token instead of returning access_token as the username
+#     return {"access_token": input_data.username, "token_type": "bearer"}
 
 # endpoint to mine a block
 @app.post("/mine_block/")
@@ -61,5 +71,5 @@ def request_logging(aprovel:bool):
 if __name__ == '__main__':
     uvicorn.run(app)
 
-# Authentication Oauth
+# Authentication Oauth2.0
 # Kalfka # Hpose # raft
