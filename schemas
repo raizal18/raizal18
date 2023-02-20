@@ -1,25 +1,15 @@
-from uuid import UUID
-from pydantic import BaseModel, Field
+import uuid
 
-class TokenSchema(BaseModel):
-    access_token: str
-    refresh_token: str
-    
-    
-class TokenPayload(BaseModel):
-    sub: str = None
-    exp: int = None
+from fastapi_users import schemas
 
 
-class UserAuth(BaseModel):
-    email: str = Field(..., description="user email")
-    password: str = Field(..., min_length=5, max_length=24, description="user password")
-    
-
-class UserOut(BaseModel):
-    id: UUID
-    email: str
+class UserRead(schemas.BaseUser[uuid.UUID]):
+    pass
 
 
-class SystemUser(UserOut):
-    password: str
+class UserCreate(schemas.BaseUserCreate):
+    pass
+
+
+class UserUpdate(schemas.BaseUserUpdate):
+    pass
