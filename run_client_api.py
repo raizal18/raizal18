@@ -2,13 +2,15 @@ import json
 import pandas as pd
 import fastapi as _fastapi
 import uvicorn
+import pickle
 
 client = _fastapi.FastAPI()
 @client.get('/blockchain/')
 def get_chain():
-    with open('cloud/data.json') as f:
-        data = json.load(f)
-    return data
+    with open('cloud/chain.pkl','rb') as f:
+        bc_obj = pickle.load(f)
+        f.close()
+    return bc_obj.chain
 @client.post("/add_new_data_req/")
 def add_new_data_req(data:str) -> str:
     with open('cloud/req.json', 'w', encoding='utf-8') as f:

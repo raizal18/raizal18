@@ -10,10 +10,13 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
-
+import pickle
 # from fastapi import Depends, FastAPI
 # from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-blockchain = _blockchain.Blockchain()
+with open('cloud/chain.pkl','rb') as f: 
+    blockchain = pickle.load(f)
+    f.close()
+# blockchain = _blockchain.Blockchain()
 
 SECRET_KEY = "6567f2802ec354406021ef6c7b6d4456c51fd9f80cc3971549b8fe188212392c"
 ALGORITHM = "HS256"
@@ -141,11 +144,18 @@ async def read_users_me(current_user: User = Depends(get_current_active_user)):
 async def mine_block(data: str, current_user: User = Depends(get_current_active_user)):
     if not blockchain.is_chain_valid():
         return _fastapi.HTTPException(status_code=400, detail="The blockchain is invalid")
-    block = blockchain.mine_block(data=data)
-    with open('cloud/data.json', 'w', encoding='utf-8') as f:
-        json.dump(blockchain.chain, f, ensure_ascii=False, indent=4)
-    return block
 
+    block = blockchain.mine_block(data=data)
+    return block
+# Upload DB
+@app.post("/upload_db/")
+async def upload_db(current_user: User = Depends(get_current_active_user)):
+    if not blockchain.is_chain_valid():
+        return _fastapi.HTTPException(status_code=400, detail="The blockchain is invalid")
+    with open('cloud/chain.pkl', 'wb') as f: 
+        pickle.dump(blockchain, f)
+        f.close()
+    return 'updated'
 
 # endpoint to return the blockchain
 @app.get("/blockchain/")
@@ -173,7 +183,7 @@ async def previous_block(current_user: User = Depends(get_current_active_user)):
         return _fastapi.HTTPException(status_code=400, detail="The blockchain is invalid")
         
     return blockchain.get_previous_block()
-@app.get('/request/')
+@app.get("/request/")
 async def get_request(current_user: User = Depends(get_current_active_user)) -> str:
     with open('cloud/req.json') as f:
         data = json.load(f)
@@ -181,17 +191,17 @@ async def get_request(current_user: User = Depends(get_current_active_user)) -> 
     return data 
 
     
-@app.get('/request_logging/')
+@app.post("/request_logging/")
 async def request_logging(aprovel:bool,current_user: User = Depends(get_current_active_user)):
     if aprovel == True:
-        block = mine_block(blockchain.req)
-        return "Aproved"
+        block = blockchain.mine_block(blockchain.req)
+        return "aproved"
     else:
         return "not Aproved"
 
 
 if __name__ == '__main__':
-    uvicorn.run('try_1:app', reload = True)
+    uvicorn.run('try_1:app',port=8000, reload = True)
 
 # Authentication Oauth2.0
 # Kalfka # Hpose # raft
