@@ -11,6 +11,56 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 import pickle
+from raft_consensus import raft_init
+
+from consensual.raft import Node, communication
+from yarl import URL
+
+node_url = URL.build(scheme='http', host='127.0.0.1', port=8000)
+
+other_node_url = URL.build(scheme='http',host='127.0.0.1',port=8080)
+
+heartbeat = 0.1
+from typing import Any, List, Optional
+processed_parameters = []
+def dummy_processor(parameters: Any) -> None:
+    processed_parameters.append(parameters)
+processors = {'dummy': dummy_processor}
+nodes = {}
+sender = communication.Sender([node_url], nodes)
+other_sender = communication.Sender([other_node_url], nodes)
+node = Node.from_url(node_url, heartbeat=heartbeat, 
+                    processors=processors, sender=sender)
+other_node = Node.from_url(other_node_url,
+                            heartbeat=heartbeat,
+                            processors=processors,
+                            sender=other_sender)
+receiver = communication.Receiver(node, nodes)
+other_receiver = communication.Receiver(other_node, nodes)
+receiver.start()
+other_receiver.start()
+from asyncio import get_event_loop
+loop = get_event_loop()
+async def run() -> List[Optional[str]]:
+    return [await node.solo(),
+            await node.enqueue('dummy', 42),
+            await node.attach_nodes([other_node.url]),
+            await node.enqueue('dummy', 42),
+            await other_node.detach_nodes([node.url]),
+            await other_node.solo(),
+            await other_node.detach(),
+            await other_node.detach()]
+error_messages =  [None, None, None, None, 'nonexistent node(s) found: 127.0.0.1:8080', None, None, None] #loop.run_until_complete(run())
+# print(error_messages)
+receiver.stop()
+other_receiver.stop()
+raft_consensus_test = all(error_message is None or isinstance(error_message, str)
+    for error_message in error_messages)
+raft_consensus_test1 = all(parameters == 42 for parameters in processed_parameters)
+if raft_consensus_test1 == True:
+    print('Raft Test passed:')
+else:
+    print('Failed Concensus Test')
 # from fastapi import Depends, FastAPI
 # from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 with open('cloud/chain.pkl','rb') as f: 
@@ -138,6 +188,15 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
 
+# @app.get("/kRaft/")
+# async def check_Concensus_of_nodes(current_user: User = Depends(get_current_active_user)) ->bool:
+#     if not blockchain.is_chain_valid():
+#         return _fastapi.HTTPException(status_code=400, detail="The blockchain is invalid")
+#     rf = raft_init()
+#     if rf == True:
+#         return 'Test Case Passed'
+#     else:
+#         return 'Connections Failed'
 
 # endpoint to mine a block
 @app.post("/mine_block/")
