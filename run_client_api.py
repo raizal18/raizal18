@@ -22,4 +22,4 @@ def add_new_data_req(data:str) -> str:
 #     return pd.DataFrame(data)
 
 if __name__ == '__main__':
-    uvicorn.run(client,  port=8080, log_level="info")
+    uvicorn.run('run_client_api:client',  port=8080, log_level="info", reload = True)

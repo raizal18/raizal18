@@ -2,6 +2,7 @@ import fastapi as _fastapi
 import blockchain as _blockchain
 import uvicorn
 import json
+
 # from fastapi import Depends, FastAPI
 # from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 blockchain = _blockchain.Blockchain()
@@ -22,6 +23,8 @@ def mine_block(data: str):
     if not blockchain.is_chain_valid():
         return _fastapi.HTTPException(status_code=400, detail="The blockchain is invalid")
     block = blockchain.mine_block(data=data)
+    with open('cloud/data.json', 'w', encoding='utf-8') as f:
+        json.dump(blockchain.chain, f, ensure_ascii=False, indent=4)
     return block
 
 
@@ -31,8 +34,8 @@ def get_blockchain():
     if not blockchain.is_chain_valid():
         return _fastapi.HTTPException(status_code=400, detail="The blockchain is invalid")
     chain = blockchain.chain
-    with open('cloud/data.json', 'w', encoding='utf-8') as f:
-        json.dump(chain, f, ensure_ascii=False, indent=4)
+    # with open('cloud/data.json', 'w', encoding='utf-8') as f:
+        # json.dump(chain, f, ensure_ascii=False, indent=4)
     return chain
 
 # endpoint to see if the chain is valid

@@ -1,3 +1,7 @@
+import fastapi as _fastapi
+import blockchain as _blockchain
+import uvicorn
+import json
 from datetime import datetime, timedelta
 from typing import Union
 
@@ -7,8 +11,10 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
-# to get a string like this run:
-# openssl rand -hex 32
+# from fastapi import Depends, FastAPI
+# from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+blockchain = _blockchain.Blockchain()
+
 SECRET_KEY = "6567f2802ec354406021ef6c7b6d4456c51fd9f80cc3971549b8fe188212392c"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -48,10 +54,7 @@ class UserInDB(User):
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-app = FastAPI()
-
-
+app = _fastapi.FastAPI()
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -133,11 +136,62 @@ async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
 
 
-@app.get("/users/me/items/")
-async def read_own_items(current_user: User = Depends(get_current_active_user)):
-    return [{"item_id": "Foo", "owner": current_user.username}]
+# endpoint to mine a block
+@app.post("/mine_block/")
+async def mine_block(data: str, current_user: User = Depends(get_current_active_user)):
+    if not blockchain.is_chain_valid():
+        return _fastapi.HTTPException(status_code=400, detail="The blockchain is invalid")
+    block = blockchain.mine_block(data=data)
+    with open('cloud/data.json', 'w', encoding='utf-8') as f:
+        json.dump(blockchain.chain, f, ensure_ascii=False, indent=4)
+    return block
 
-import uvicorn
+
+# endpoint to return the blockchain
+@app.get("/blockchain/")
+async def get_blockchain(current_user: User = Depends(get_current_active_user)):
+    if not blockchain.is_chain_valid():
+        return _fastapi.HTTPException(status_code=400, detail="The blockchain is invalid")
+    chain = blockchain.chain
+    # with open('cloud/data.json', 'w', encoding='utf-8') as f:
+        # json.dump(chain, f, ensure_ascii=False, indent=4)
+    return chain
+
+# endpoint to see if the chain is valid
+@app.get("/validate/")
+async def is_blockchain_valid(current_user: User = Depends(get_current_active_user)):
+    if not blockchain.is_chain_valid():
+        return _fastapi.HTTPException(status_code=400, detail="The blockchain is invalid")
+
+    return blockchain.is_chain_valid()
+
+
+# endpoint to return the last block
+@app.get("/blockchain/last/")
+async def previous_block(current_user: User = Depends(get_current_active_user)):
+    if not blockchain.is_chain_valid():
+        return _fastapi.HTTPException(status_code=400, detail="The blockchain is invalid")
+        
+    return blockchain.get_previous_block()
+@app.get('/request/')
+async def get_request(current_user: User = Depends(get_current_active_user)) -> str:
+    with open('cloud/req.json') as f:
+        data = json.load(f)
+    blockchain.req = data
+    return data 
+
+    
+@app.get('/request_logging/')
+async def request_logging(aprovel:bool,current_user: User = Depends(get_current_active_user)):
+    if aprovel == True:
+        block = mine_block(blockchain.req)
+        return "Aproved"
+    else:
+        return "not Aproved"
+
 
 if __name__ == '__main__':
-    uvicorn.run(app)
+    uvicorn.run('try_1:app', reload = True)
+
+# Authentication Oauth2.0
+# Kalfka # Hpose # raft
