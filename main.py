@@ -259,8 +259,8 @@ async def request_logging(aprovel:bool,current_user: User = Depends(get_current_
         return "not Aproved"
 
 
-if __name__ == '__main__':
-    uvicorn.run('main:app',port=8000, reload = True)
+# if __name__ == '__main__':
+#     uvicorn.run('main:app',port=8000, reload = True)
 
 # Authentication Oauth2.0
 # Kalfka # Hpose # raft
