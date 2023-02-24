@@ -78,7 +78,7 @@ fake_users_db = {
         "username": "rasu",
         "full_name": "rasukrish",
         "email": "rasukrish6@gmail.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+        "hashed_password": "$2a$12$hzIr9RjTBFLWM4doOgEmB.Zx5MrI54hXvKh1n0ppSs5AtNoSrxQY2",
         "disabled": False,
     }
 }
