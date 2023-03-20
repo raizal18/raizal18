@@ -25,7 +25,7 @@ fake_users_db = {
         "username": "client",
         "full_name": "client01",
         "email": "client01@gmail.com",
-        "hashed_password": "$2a$12$Xs3Agk5XECZxpl/IYGrLqO5EY5kCO/VQKp70ihVQ2zt/.7hbpN8Xu",
+        "hashed_password": "$2a$12$5.k94gehfbntP0ErRNQ1WuZ.RvTGe1u1pFqj4IvVppn47FJE7Iope",
         "disabled": False,
     }
 }
