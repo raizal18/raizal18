@@ -2,19 +2,54 @@ import requests
 import requests_oauthlib
 from requests.exceptions import ConnectionError
 
-ac = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyYXN1IiwiZXhwIjoxNjc5NTU1MTk2fQ.Ql2cfpiR6qSKHadGMOzugydCXuDxDTsOISUyVnc4JyU"
 
-endpoint_url = "http://127.0.0.1:8000/blockchain/"
+# Authorization data
 
-headers = {
-    "Authorization": f"Bearer {ac}"
+import base64
+import requests
+
+username = 'admin'
+password = 'password'
+consumer_key = 'ggczWttBWlTjXCEtk3Yie_WJGEIa'
+consumer_secret = 'uuzPjjJykiuuLfHkfgSdXLV98Ciga'
+consumer_key_secret = consumer_key+":"+consumer_secret
+consumer_key_secret_enc = base64.b64encode(consumer_key_secret.encode()).decode()
+
+# Your decoded key will be something like:
+#zzRjettzNUJXbFRqWENuuGszWWllX1iiR0VJYTpRelBLZkp5a2l2V0xmSGtmZ1NkWExWzzhDaWdh
+
+
+headersAuth = {
+    'Authorization': 'Basic '+ str(consumer_key_secret_enc),
 }
 
+data = {
+  'grant_type': 'password',
+  'username': username,
+  'password': password
+}
+
+## Authentication request
+
+response = requests.post('http://127.0.0.1:8000/token', headers=headersAuth, data=data, verify=True)
+j = response.json()
+
 try:
+    ac = j['access_token']
 
-    response = requests.get(endpoint_url, headers=headers)
-    print(response.json())
+    endpoint_url = "http://127.0.0.1:8000/blockchain/"
 
-except ConnectionError as e:
+    headers = {
+        "Authorization": f"Bearer {ac}"
+    }
 
-    print("Server Not Running")
+    try:
+
+        response = requests.get(endpoint_url, headers=headers)
+        print(response.json())
+
+    except ConnectionError as e:
+
+        print("Server Not Running")
+except:
+    response = 'Creditional invalid'

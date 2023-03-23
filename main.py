@@ -74,10 +74,17 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 fake_users_db = {
-    "rasu": {
-        "username": "rasu",
-        "full_name": "rasukrish",
-        "email": "rasukrish6@gmail.com",
+    "admin": {
+        "username": "admin",
+        "full_name": "admin",
+        "email": "admin@gmail.com",
+        "hashed_password": "$2a$12$hzIr9RjTBFLWM4doOgEmB.Zx5MrI54hXvKh1n0ppSs5AtNoSrxQY2",
+        "disabled": False,
+    },
+       "client": {
+        "username": "client",
+        "full_name": "client01",
+        "email": "admin6@gmail.com",
         "hashed_password": "$2a$12$hzIr9RjTBFLWM4doOgEmB.Zx5MrI54hXvKh1n0ppSs5AtNoSrxQY2",
         "disabled": False,
     }
