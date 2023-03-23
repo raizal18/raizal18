@@ -1,10 +1,12 @@
 import requests
 import requests_oauthlib
 from requests.exceptions import ConnectionError
-
+from fastapi import Depends, FastAPI, HTTPException, status
+import pandas as pd
 
 # Authorization data
 
+client = FastAPI()
 import base64
 import requests
 
@@ -47,7 +49,7 @@ try:
 
         response = requests.get(endpoint_url, headers=headers)
         print(response.json())
-
+        
     except ConnectionError as e:
 
         print("Server Not Running")
