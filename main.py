@@ -4,8 +4,8 @@ import uvicorn
 import json
 from datetime import datetime, timedelta
 from typing import Union
-
-from fastapi import Depends, FastAPI, HTTPException, status
+import os
+from fastapi import Depends, FastAPI, HTTPException, status,File, UploadFile
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -214,6 +214,22 @@ async def mine_block(data: str, current_user: User = Depends(get_current_active_
     block = blockchain.mine_block(data=data)
     return block
 # Upload DB
+@app.post("/upload_images/")
+async def mine_block(data: str,file: UploadFile = File(...), current_user: User = Depends(get_current_active_user)):
+    if not blockchain.is_chain_valid():
+        return _fastapi.HTTPException(status_code=400, detail="The blockchain is invalid")
+    try:
+        contents = file.file.read()
+
+        with open(os.path.join('cloud', 'cloudstore',file.filename), 'wb') as f:
+            f.write(contents)
+    except Exception:
+        return {"message": "There was an error uploading the file"}
+    finally:
+        file.file.close()
+    block = blockchain.mine_block(data=data+f' image: {file.filename}')
+    return block
+
 @app.post("/upload_db/")
 async def upload_db(current_user: User = Depends(get_current_active_user)):
     if not blockchain.is_chain_valid():

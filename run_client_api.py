@@ -1,4 +1,5 @@
 import json
+import os
 import pandas as pd
 import fastapi as _fastapi
 import uvicorn
@@ -7,7 +8,7 @@ from datetime import datetime, timedelta
 from typing import Union
 import requests
 import requests_oauthlib
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status, UploadFile,File
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -147,6 +148,26 @@ async def add_new_data_req(data:str,current_user: User = Depends(get_current_act
     with open('cloud/req.json', 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     return data
+@client.post("/upload_images/")
+
+async def upload_image(data: str,file: UploadFile = File(...), current_user: User = Depends(get_current_active_user)):
+    try:
+        contents = file.file.read()
+
+        with open(os.path.join('cloud','cloudstore',file.filename), 'wb') as f:
+            f.write(contents)
+        with open(os.path.join('localnet',file.filename), 'wb') as f:
+            f.write(contents)
+    except Exception:
+        return {"message": "There was an error uploading the file"}
+    finally:
+        file.file.close()
+    with open('cloud/req.json', 'w', encoding='utf-8') as f:
+        json.dump(data+f' Image : {file.filename}', f, ensure_ascii=False, indent=4)
+    with open('cloud/uploadList.json', 'w', encoding='utf-8') as g:
+        json.dump(f'Image:{file.filename}', g, ensure_ascii=False, indent=4)
+
+    return data+f' image: {file.filename}'
 
 # @client.get('/Updated Chain block/')
 # def get_chain_pd():
