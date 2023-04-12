@@ -17,8 +17,6 @@ def run_simulator():
     maxShards = 200
     delay = 148
 
-
-
     def simulate(nodevalue, port:int = 8001,maxshard = 200, delay:float= 148):
         
         if type(nodevalue) == list:
