@@ -1,4 +1,4 @@
-- 👋 Hi, I’m @raizal18
+- 👋 Hi, I’m Ram
 - 👀 I’m interested in Data science 
 - 🌱 I’m currently working as a Data scientist Developer python and matlab 
 
