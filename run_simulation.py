@@ -7,11 +7,13 @@ import numpy as np
 from intiate_simpy import run_simulator
 import pickle
 
-(CumThroughPut, 
+(CumThroughPut, ThrouputPerNode, userLatencyShard, userlatencyNode, NUMBEROFNODES, NUMBEROFSHARD) = run_simulator()
+
+with open('base.pkl','wb') as f:
+    pickle.dump([CumThroughPut, 
 ThrouputPerNode,  
 userLatencyShard,  
 userlatencyNode, 
-NUMBEROFNODES, NUMBEROFSHARD) = run_simulator()
+NUMBEROFNODES, NUMBEROFSHARD],f)
 
-
-
+pickle.load('base.pkl')
