@@ -50,7 +50,7 @@ def run_simulator():
     # For max shards of 200
     env.process(simOBJ)
 
-    throuputNode = [i[2] for i in val]
+    nodethrouput = [i[2] for i in val]
     userlat_node = [i[3] for i in val]
 
     diffshard = [100, 200, 300, 400];
@@ -72,4 +72,4 @@ def run_simulator():
     thput = np.array(thp)
     cth = np.sum(thput,axis=1)
     lat = [i[0]*100 for i in laten]
-    return cth ,throuputNode, lat, userlat_node ,NUMBEROFNODES , diffshard
+    return cth ,nodethrouput, lat, userlat_node ,NUMBEROFNODES , diffshard
