@@ -51,5 +51,5 @@ def upload_image(data: str,file: UploadFile = File(...)):
 
 import uvicorn 
 if __name__ == '__main__':
-    uvicorn.run('simulator_class:client', host = '127.0.0.1',
+    uvicorn.run('simulator_config:client', host = '127.0.0.1',
                 port = 8001, log_level="info", reload = True)
