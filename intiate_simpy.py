@@ -8,7 +8,6 @@ import random
 import math
 import socket
 import requests_oauthlib 
-from elasticsearch import Elasticsearch
 import uvicorn
 import numpy as np
 def run_simulator():
