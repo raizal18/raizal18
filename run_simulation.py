@@ -15,5 +15,3 @@ ThrouputPerNode,
 userLatencyShard,  
 userlatencyNode, 
 NUMBEROFNODES, NUMBEROFSHARD],f)
-
-pickle.load('base.pkl')
