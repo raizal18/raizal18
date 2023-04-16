@@ -7,7 +7,11 @@ import numpy as np
 from intiate_simpy import run_simulator
 import pickle
 import subprocess
+import time
 
+os.system('wt.exe py simulator_config.py')
+
+time.sleep(5)
 
 (CumThroughPut, ThrouputPerNode, userLatencyShard, userlatencyNode, NUMBEROFNODES, NUMBEROFSHARD) = run_simulator()
 
@@ -17,3 +21,11 @@ ThrouputPerNode,
 userLatencyShard,  
 userlatencyNode, 
 NUMBEROFNODES, NUMBEROFSHARD],f)
+
+
+
+
+
+
+
+
