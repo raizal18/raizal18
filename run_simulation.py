@@ -8,7 +8,6 @@ from intiate_simpy import run_simulator
 import pickle
 import subprocess
 
-subprocess.call(['sh', './server_sh.sh'])
 
 (CumThroughPut, ThrouputPerNode, userLatencyShard, userlatencyNode, NUMBEROFNODES, NUMBEROFSHARD) = run_simulator()
 
