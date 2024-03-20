@@ -1,6 +1,8 @@
 - 👋 Hi, I’m Ram
-- 👀 I’m interested in Data science 
-- 🌱 I’m currently working as a Data scientist Developer python and matlab 
+- 👀 I’m interested in Machine Learning  
+- 🌱 I’m currently working as a Software Engineer
+- Languages MATLAB, Python
+- 
 
 <!---
 raizal18/raizal18 is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
